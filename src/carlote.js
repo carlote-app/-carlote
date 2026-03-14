@@ -3,6 +3,7 @@ const Groq = require("groq-sdk");
 const fs = require("fs");
 require("dotenv").config({ path: ".env" });
 const { gerarPDF } = require("./gerador");
+const { abrirPR } = require("./pr");
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
@@ -62,6 +63,7 @@ Seja direto e técnico.`,
 
   return resposta.choices[0].message.content;
 }
+
 async function gerarCorrecoes(relatorio, codigo, arquivo) {
   console.log("🔧 Carlote gerando correções...\n");
 
@@ -88,7 +90,6 @@ Seja direto e mostre apenas os trechos relevantes, não o arquivo inteiro.`,
 
   const correcoes = resposta.choices[0].message.content;
   
-  // Salva as correções em arquivo
   const nomeArquivo = `correcoes-${Date.now()}.html`;
   
   const html = `<!DOCTYPE html>
@@ -105,11 +106,6 @@ Seja direto e mostre apenas os trechos relevantes, não o arquivo inteiro.`,
   .conteudo { padding: 0 32px 48px; }
   .card { background: white; border-radius: 12px; padding: 24px; margin-bottom: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
   pre { background: #1e1e1e; color: #d4d4d4; padding: 16px; border-radius: 8px; overflow-x: auto; font-size: 13px; line-height: 1.6; margin: 12px 0; white-space: pre-wrap; }
-  .antes { border-left: 4px solid #993C1D; }
-  .depois { border-left: 4px solid #0F6E56; }
-  .label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
-  .label.antes { color: #993C1D; }
-  .label.depois { color: #0F6E56; }
   p { font-size: 14px; line-height: 1.7; color: #444441; margin-bottom: 8px; }
   code { background: #EEEDFE; color: #534AB7; padding: 1px 5px; border-radius: 3px; font-size: 12px; }
   .rodape { text-align: center; padding: 24px; color: #888780; font-size: 12px; border-top: 1px solid #D3D1C7; }
@@ -140,13 +136,15 @@ Seja direto e mostre apenas os trechos relevantes, não o arquivo inteiro.`,
   console.log(`\n🔧 Correções salvas em: ${nomeArquivo}`);
   console.log("💡 Abra o arquivo no navegador para ver as correções!\n");
 }
+
 async function main() {
   const arquivo = process.argv[2];
   const modo = process.argv[3];
   const fix = modo === "--fix";
+  const pr = modo === "--pr";
 
   if (!arquivo) {
-    console.log("Uso: node src/carlote.js <arquivo>");
+    console.log("Uso: node src/carlote.js <arquivo> [--fix] [--pr]");
     return;
   }
 
@@ -156,17 +154,12 @@ async function main() {
   }
 
   const codigo = fs.readFileSync(arquivo, "utf8");
-  let relatorio = ""; 
- if (fix) {
-    console.log("\n🔧 Modo --fix ativado! Gerando correções...\n");
-    await gerarCorrecoes(relatorio, codigo, arquivo);
-  }  
+  let relatorio = "";
 
+  console.log("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+  console.log("🤖 CARLOTE — Relatório de QA por Funcionalidade");
+  console.log(`📁 Arquivo: ${arquivo}`);
   console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-  console.log(`✅ Análise concluída!`);
-  console.log(`✅ Relatorio e correcoes gerados com sucesso!`);
-  console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n");
-  
 
   for (let i = 0; i < FUNCIONALIDADES.length; i++) {
     const { nome, palavras } = FUNCIONALIDADES[i];
@@ -182,14 +175,26 @@ async function main() {
     }
   }
 
-  // Salva o relatório em arquivo
-  const nomeRelatorio = `relatorio-qa-${Date.now()}.txt`;
-  fs.writeFileSync(nomeRelatorio, `CARLOTE — RELATÓRIO DE QA\nArquivo: ${arquivo}\nData: ${new Date().toLocaleString("pt-BR")}\n${relatorio}`);
+  const nomeRelatorio = `relatorio-qa-${Date.now()}`;
+  fs.writeFileSync(`${nomeRelatorio}.txt`, `CARLOTE — RELATÓRIO DE QA\nArquivo: ${arquivo}\nData: ${new Date().toLocaleString("pt-BR")}\n${relatorio}`);
   await gerarPDF(relatorio, arquivo);
-  console.log("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+
+  if (fix) {
+    console.log("\n🔧 Modo --fix ativado! Gerando correções...\n");
+    await gerarCorrecoes(relatorio, codigo, arquivo);
+  }
+
+  if (pr) {
+    console.log("\n🔀 Modo --pr ativado! Abrindo PR com correções...\n");
+    const owner = process.argv[4] || "somos-civico";
+    const repo = process.argv[5] || "civico-web";
+    await abrirPR(owner, repo, codigo, arquivo);
+  }
+
+  console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
   console.log(`✅ Análise concluída!`);
-  console.log(`📄 Relatório salvo em: ${nomeRelatorio}`);
+  console.log(`📄 Relatório salvo em: ${nomeRelatorio}.txt`);
   console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n");
 }
-    
+
 main();
