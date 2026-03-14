@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Carlote — IA de QA para desenvolvedores brasileiros</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', sans-serif; background: #0a0a0f; color: #fff; }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0a0a0f 0%, #1a1535 50%, #0a0a0f 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(83,74,183,0.15) 0%, transparent 70%);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .badge {
+    background: rgba(83,74,183,0.2);
+    border: 1px solid rgba(83,74,183,0.4);
+    color: #AFA9EC;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    margin-bottom: 24px;
+    display: inline-block;
+  }
+  .hero h1 {
+    font-size: 72px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #fff 0%, #AFA9EC 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 16px;
+    line-height: 1.1;
+  }
+  .hero p {
+    font-size: 20px;
+    color: #888;
+    max-width: 560px;
+    line-height: 1.7;
+    margin-bottom: 40px;
+  }
+  .hero p span { color: #AFA9EC; }
+  .botoes { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+  .btn-primary {
+    background: #534AB7;
+    color: white;
+    padding: 14px 32px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.2s;
+  }
+  .btn-primary:hover { background: #3C3489; }
+  .btn-secondary {
+    background: transparent;
+    color: #AFA9EC;
+    padding: 14px 32px;
+    border-radius: 8px;
+    font-size: 16px;
+    border: 1px solid rgba(83,74,183,0.4);
+    text-decoration: none;
+    transition: border-color 0.2s;
+  }
+  .btn-secondary:hover { border-color: #534AB7; }
+
+  /* COMANDO */
+  .comando {
+    margin-top: 48px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 16px 24px;
+    font-family: 'Courier New', monospace;
+    font-size: 16px;
+    color: #AFA9EC;
+  }
+  .comando span { color: #5DCAA5; }
+
+  /* STATS */
+  .stats {
+    display: flex;
+    gap: 48px;
+    margin-top: 64px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .stat { text-align: center; }
+  .stat .numero { font-size: 36px; font-weight: 700; color: #534AB7; }
+  .stat .label { font-size: 13px; color: #666; margin-top: 4px; }
+
+  /* FUNCIONALIDADES */
+  .secao {
+    padding: 80px 20px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .secao-titulo {
+    text-align: center;
+    font-size: 36px;
+    font-weight: 700;
+    margin-bottom: 16px;
+  }
+  .secao-sub {
+    text-align: center;
+    color: #666;
+    font-size: 16px;
+    margin-bottom: 48px;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+  }
+  .card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 28px;
+    transition: border-color 0.2s;
+  }
+  .card:hover { border-color: rgba(83,74,183,0.4); }
+  .card-icon { font-size: 32px; margin-bottom: 16px; }
+  .card h3 { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+  .card p { color: #666; font-size: 14px; line-height: 1.6; }
+
+  /* PLANOS */
+  .planos { background: rgba(255,255,255,0.02); padding: 80px 20px; }
+  .planos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 24px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .plano {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 32px;
+    text-align: center;
+  }
+  .plano.destaque {
+    border-color: #534AB7;
+    background: rgba(83,74,183,0.1);
+  }
+  .plano h3 { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+  .plano .preco { font-size: 40px; font-weight: 800; color: #534AB7; margin: 16px 0 4px; }
+  .plano .preco span { font-size: 16px; color: #666; font-weight: 400; }
+  .plano ul { list-style: none; margin: 20px 0; text-align: left; }
+  .plano ul li { color: #888; font-size: 14px; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+  .plano ul li::before { content: "✓ "; color: #5DCAA5; font-weight: 700; }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 40px 20px;
+    color: #444;
+    font-size: 13px;
+    border-top: 1px solid rgba(255,255,255,0.05);
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="badge">Pioneira em QA com IA no Brasil</div>
+  <h1>Carlote</h1>
+  <p>A IA de QA feita para o <span>desenvolvedor brasileiro</span>. Detecta bugs, gera testes e produz relatórios profissionais automaticamente.</p>
+  
+  <div class="botoes">
+    <a href="https://npmjs.com/package/carlote-ia" class="btn-primary">Começar grátis</a>
+    <a href="https://github.com/carlote-app/-carlote" class="btn-secondary">Ver no GitHub</a>
+  </div>
+
+  <div class="comando">
+    <span>$</span> npx carlote-ia seu-arquivo.js
+  </div>
+
+  <div class="stats">
+    <div class="stat">
+      <div class="numero">5</div>
+      <div class="label">Funcionalidades analisadas</div>
+    </div>
+    <div class="stat">
+      <div class="numero">90%</div>
+      <div class="label">Precisão na detecção</div>
+    </div>
+    <div class="stat">
+      <div class="numero">30s</div>
+      <div class="label">Tempo de análise</div>
+    </div>
+    <div class="stat">
+      <div class="numero">R$0</div>
+      <div class="label">Para começar</div>
+    </div>
+  </div>
+</section>
+
+<!-- FUNCIONALIDADES -->
+<section class="secao">
+  <h2 class="secao-titulo">Tudo que você precisa de QA</h2>
+  <p class="secao-sub">A Carlote faz o trabalho de um QA profissional em segundos</p>
+  
+  <div class="grid">
+    <div class="card">
+      <div class="card-icon">🐛</div>
+      <h3>Detecção de bugs</h3>
+      <p>Identifica bugs críticos, altos, médios e baixos com explicação clara de cada problema encontrado.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">✅</div>
+      <h3>Casos de teste</h3>
+      <p>Gera automaticamente casos de teste no formato CT-001, CT-002 com pré-condições e resultados esperados.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🔧</div>
+      <h3>Correções automáticas</h3>
+      <p>Com o comando --fix a Carlote sugere o código corrigido para cada bug encontrado.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">📄</div>
+      <h3>Relatório profissional</h3>
+      <p>Gera relatório HTML completo com cores, badges de severidade e checklist de qualidade.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🇧🇷</div>
+      <h3>100% em português</h3>
+      <p>Toda análise, relatório e sugestão em português brasileiro. Feito para o dev brasileiro.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">⚡</div>
+      <h3>30 segundos</h3>
+      <p>Analisa seu projeto completo em menos de 30 segundos. Sem configuração, sem complicação.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PLANOS -->
+<section class="planos">
+  <div style="max-width:1100px;margin:0 auto">
+    <h2 class="secao-titulo">Planos</h2>
+    <p class="secao-sub">Comece grátis, cresça quando precisar</p>
+    
+    <div class="planos-grid">
+      <div class="plano">
+        <h3>Starter</h3>
+        <div class="preco">R$0<span>/mês</span></div>
+        <ul>
+          <li>1 projeto</li>
+          <li>50 análises/mês</li>
+          <li>Relatório HTML</li>
+          <li>Detecção de bugs</li>
+        </ul>
+        <a href="https://npmjs.com/package/carlote-ia" class="btn-secondary">Começar grátis</a>
+      </div>
+      <div class="plano destaque">
+        <h3>Pro</h3>
+        <div class="preco">R$149<span>/mês</span></div>
+        <ul>
+          <li>5 projetos</li>
+          <li>Análises ilimitadas</li>
+          <li>Relatório PDF</li>
+          <li>Comando --fix</li>
+          <li>Suporte prioritário</li>
+        </ul>
+        <a href="#" class="btn-primary">Em breve</a>
+      </div>
+      <div class="plano">
+        <h3>Agency</h3>
+        <div class="preco">R$349<span>/mês</span></div>
+        <ul>
+          <li>Projetos ilimitados</li>
+          <li>White-label</li>
+          <li>API própria</li>
+          <li>Dashboard web</li>
+          <li>Suporte dedicado</li>
+        </ul>
+        <a href="#" class="btn-secondary">Em breve</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>Carlote — IA de QA para desenvolvedores brasileiros</p>
+  <p style="margin-top:8px">
+    <a href="https://github.com/carlote-app/-carlote" style="color:#534AB7;text-decoration:none">GitHub</a> · 
+    <a href="https://npmjs.com/package/carlote-ia" style="color:#534AB7;text-decoration:none">npm</a>
+  </p>
+</footer>
+
+</body>
+</html>
