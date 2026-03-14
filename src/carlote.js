@@ -18,7 +18,7 @@ const FUNCIONALIDADES = [
 function extrairTrecho(codigo, palavras) {
   const linhas = codigo.split("\n");
   const linhasRelevantes = [];
-  
+
   linhas.forEach((linha, i) => {
     const relevante = palavras.some(p => linha.toLowerCase().includes(p.toLowerCase()));
     if (relevante) {
@@ -89,9 +89,10 @@ Seja direto e mostre apenas os trechos relevantes, não o arquivo inteiro.`,
   });
 
   const correcoes = resposta.choices[0].message.content;
-  
-  const nomeArquivo = `correcoes-${Date.now()}.html`;
-  
+
+  if (!fs.existsSync("output")) fs.mkdirSync("output");
+  const nomeArquivo = `output/correcoes-${Date.now()}.html`;
+
   const html = `<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -144,12 +145,23 @@ async function main() {
   const pr = modo === "--pr";
 
   if (!arquivo) {
-    console.log("Uso: node src/carlote.js <arquivo> [--fix] [--pr]");
+    console.log("\nUso:");
+    console.log("  node src/carlote.js <arquivo>          — analisar");
+    console.log("  node src/carlote.js <arquivo> --fix    — analisar e sugerir correções");
+    console.log("  node src/carlote.js <arquivo> --pr owner repo — analisar e abrir PR");
     return;
   }
 
   if (!fs.existsSync(arquivo)) {
-    console.log(`Arquivo não encontrado: ${arquivo}`);
+    console.log(`\n❌ Arquivo não encontrado: ${arquivo}`);
+    console.log("Verifique o caminho e tente novamente.\n");
+    return;
+  }
+
+  if (!process.env.GROQ_API_KEY) {
+    console.log("\n❌ GROQ_API_KEY não encontrada!");
+    console.log("Crie um arquivo .env com: GROQ_API_KEY=sua_chave");
+    console.log("Obtenha sua chave grátis em: console.groq.com\n");
     return;
   }
 
@@ -175,7 +187,8 @@ async function main() {
     }
   }
 
-  const nomeRelatorio = `relatorio-qa-${Date.now()}`;
+  if (!fs.existsSync("output")) fs.mkdirSync("output");
+  const nomeRelatorio = `output/relatorio-qa-${Date.now()}`;
   fs.writeFileSync(`${nomeRelatorio}.txt`, `CARLOTE — RELATÓRIO DE QA\nArquivo: ${arquivo}\nData: ${new Date().toLocaleString("pt-BR")}\n${relatorio}`);
   await gerarPDF(relatorio, arquivo);
 
@@ -193,7 +206,7 @@ async function main() {
 
   console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
   console.log(`✅ Análise concluída!`);
-  console.log(`📄 Relatório salvo em: ${nomeRelatorio}.txt`);
+  console.log(`📁 Relatórios salvos em: output/`);
   console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n");
 }
 
