@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 const Groq = require("groq-sdk");
 const fs = require("fs");
 require("dotenv").config({ path: ".env" });
