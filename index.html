@@ -8,7 +8,6 @@
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { font-family: 'Segoe UI', sans-serif; background: #0a0a0f; color: #fff; }
 
-  /* HERO */
   .hero {
     min-height: 100vh;
     background: linear-gradient(135deg, #0a0a0f 0%, #1a1535 50%, #0a0a0f 100%);
@@ -20,7 +19,6 @@
     padding: 40px 20px;
     position: relative;
   }
-  
   .hero::before {
     content: '';
     position: absolute;
@@ -30,7 +28,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-     pointer-events: none;
+    pointer-events: none;
   }
   .badge {
     background: rgba(83,74,183,0.2);
@@ -82,8 +80,6 @@
     transition: border-color 0.2s;
   }
   .btn-secondary:hover { border-color: #534AB7; }
-
-  /* COMANDO */
   .comando {
     margin-top: 48px;
     background: rgba(255,255,255,0.05);
@@ -95,8 +91,6 @@
     color: #AFA9EC;
   }
   .comando span { color: #5DCAA5; }
-
-  /* STATS */
   .stats {
     display: flex;
     gap: 48px;
@@ -107,8 +101,6 @@
   .stat { text-align: center; }
   .stat .numero { font-size: 36px; font-weight: 700; color: #534AB7; }
   .stat .label { font-size: 13px; color: #666; margin-top: 4px; }
-
-  /* FUNCIONALIDADES */
   .secao {
     padding: 80px 20px;
     max-width: 1100px;
@@ -142,8 +134,6 @@
   .card-icon { font-size: 32px; margin-bottom: 16px; }
   .card h3 { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
   .card p { color: #666; font-size: 14px; line-height: 1.6; }
-
-  /* PLANOS */
   .planos { background: rgba(255,255,255,0.02); padding: 80px 20px; }
   .planos-grid {
     display: grid;
@@ -169,8 +159,6 @@
   .plano ul { list-style: none; margin: 20px 0; text-align: left; }
   .plano ul li { color: #888; font-size: 14px; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
   .plano ul li::before { content: "✓ "; color: #5DCAA5; font-weight: 700; }
-
-  /* FOOTER */
   footer {
     text-align: center;
     padding: 40px 20px;
@@ -187,16 +175,13 @@
   <div class="badge">🇧🇷 Pioneira em QA com IA no Brasil</div>
   <h1>Carlote</h1>
   <p>A IA de QA feita para o <span>desenvolvedor brasileiro</span>. Detecta bugs, gera testes e produz relatórios profissionais automaticamente.</p>
-  
   <div class="botoes">
     <a href="https://www.npmjs.com/package/carlote-ia" target="_blank" class="btn-primary">Começar grátis</a>
     <a href="https://github.com/carlote-app/-carlote" target="_blank" class="btn-secondary">Ver no GitHub</a>
   </div>
-
   <div class="comando">
     <span>$</span> npx carlote-ia seu-arquivo.js
   </div>
-
   <div class="stats">
     <div class="stat">
       <div class="numero">5</div>
@@ -221,7 +206,6 @@
 <section class="secao">
   <h2 class="secao-titulo">Tudo que você precisa de QA</h2>
   <p class="secao-sub">A Carlote faz o trabalho de um QA profissional em segundos</p>
-  
   <div class="grid">
     <div class="card">
       <div class="card-icon">🐛</div>
@@ -256,12 +240,43 @@
   </div>
 </section>
 
+<!-- COMO USAR -->
+<section class="secao">
+  <h2 class="secao-titulo">Como usar</h2>
+  <p class="secao-sub">Em 3 passos simples você tem QA profissional no seu projeto</p>
+  <div class="grid" style="max-width:800px;margin:0 auto">
+    <div class="card" style="text-align:center">
+      <div style="width:48px;height:48px;background:#534AB7;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:20px;font-weight:700">1</div>
+      <h3>Instale a Carlote</h3>
+      <p style="margin-top:8px">Rode no terminal do seu projeto</p>
+      <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:12px;margin-top:12px;font-family:monospace;font-size:13px;color:#AFA9EC">
+        npm install -g carlote-ia
+      </div>
+    </div>
+    <div class="card" style="text-align:center">
+      <div style="width:48px;height:48px;background:#534AB7;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:20px;font-weight:700">2</div>
+      <h3>Aponte para seu código</h3>
+      <p style="margin-top:8px">Passe o arquivo que quer analisar</p>
+      <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:12px;margin-top:12px;font-family:monospace;font-size:13px;color:#AFA9EC">
+        npx carlote-ia App.js
+      </div>
+    </div>
+    <div class="card" style="text-align:center">
+      <div style="width:48px;height:48px;background:#534AB7;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:20px;font-weight:700">3</div>
+      <h3>Receba o relatório</h3>
+      <p style="margin-top:8px">HTML profissional gerado em 30s</p>
+      <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:12px;margin-top:12px;font-family:monospace;font-size:13px;color:#AFA9EC">
+        npx carlote-ia App.js --fix
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- PLANOS -->
 <section class="planos">
   <div style="max-width:1100px;margin:0 auto">
     <h2 class="secao-titulo">Planos</h2>
     <p class="secao-sub">Comece grátis, cresça quando precisar</p>
-    
     <div class="planos-grid">
       <div class="plano">
         <h3>Starter</h3>
@@ -272,7 +287,7 @@
           <li>Relatório HTML</li>
           <li>Detecção de bugs</li>
         </ul>
-        <a href="https://npmjs.com/package/carlote-ia" class="btn-secondary">Começar grátis</a>
+        <a href="https://www.npmjs.com/package/carlote-ia" target="_blank" class="btn-secondary">Começar grátis</a>
       </div>
       <div class="plano destaque">
         <h3>Pro</h3>
@@ -301,35 +316,29 @@
     </div>
   </div>
 </section>
+
 <!-- CONTATO -->
 <section class="secao" style="text-align:center">
   <h2 class="secao-titulo">Quer saber mais?</h2>
   <p class="secao-sub">Deixa seu email e a gente entra em contato sobre os planos Pro e Agency</p>
-  
-  <form action="https://formsubmit.co/SEU_EMAIL_AQUI" method="POST" style="max-width:480px;margin:0 auto;display:flex;gap:12px;flex-wrap:wrap;justify-content:center">
+  <form action="https://formsubmit.co/civico.app@outlook.com" method="POST" style="max-width:480px;margin:0 auto;display:flex;gap:12px;flex-wrap:wrap;justify-content:center">
     <input type="hidden" name="_subject" value="Interesse na Carlote">
     <input type="hidden" name="_captcha" value="false">
-    <input 
-      type="email" 
-      name="email"
-      placeholder="civico.app@outlook.com" 
-      required
-      style="flex:1;min-width:200px;padding:14px 20px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:white;font-size:15px;outline:none"
-    >
-    <button 
-      type="submit"
-      style="background:#534AB7;color:white;padding:14px 28px;border-radius:8px;border:none;font-size:15px;font-weight:600;cursor:pointer"
-    >
+    <input type="email" name="email" placeholder="seu@email.com" required
+      style="flex:1;min-width:200px;padding:14px 20px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:white;font-size:15px;outline:none">
+    <button type="submit"
+      style="background:#534AB7;color:white;padding:14px 28px;border-radius:8px;border:none;font-size:15px;font-weight:600;cursor:pointer">
       Quero saber mais
     </button>
   </form>
 </section>
+
 <!-- FOOTER -->
 <footer>
   <p>Carlote — IA de QA para desenvolvedores brasileiros</p>
   <p style="margin-top:8px">
-    <a href=https://github.com/carlote-app/ style="color:#534AB7;text-decoration:none">GitHub</a> · 
-    <a href="https://npmjs.com/package/carlote-ia" style="color:#534AB7;text-decoration:none">npm</a>
+    <a href="https://github.com/carlote-app/-carlote" target="_blank" style="color:#534AB7;text-decoration:none">GitHub</a> · 
+    <a href="https://www.npmjs.com/package/carlote-ia" target="_blank" style="color:#534AB7;text-decoration:none">npm</a>
   </p>
 </footer>
 
