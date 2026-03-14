@@ -1,0 +1,15 @@
+.env
+.gitignore
+node_modules
+output
+exemplos
+index.html
+node
+npm
+explorer
+App.js
+*.txt
+*.pdf
+*.html
+correcoes-*
+relatorio-qa-*
