@@ -1,2 +1,5 @@
 .env
 node_modules
+relatorio-qa-*.txt
+App.js
+teste.js
