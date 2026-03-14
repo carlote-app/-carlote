@@ -1,6 +1,7 @@
 const Groq = require("groq-sdk");
 const fs = require("fs");
 require("dotenv").config({ path: ".env" });
+const { gerarPDF } = require("./gerador");
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
@@ -100,11 +101,11 @@ async function main() {
   // Salva o relatório em arquivo
   const nomeRelatorio = `relatorio-qa-${Date.now()}.txt`;
   fs.writeFileSync(nomeRelatorio, `CARLOTE — RELATÓRIO DE QA\nArquivo: ${arquivo}\nData: ${new Date().toLocaleString("pt-BR")}\n${relatorio}`);
-
+  await gerarPDF(relatorio, arquivo);
   console.log("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
   console.log(`✅ Análise concluída!`);
   console.log(`📄 Relatório salvo em: ${nomeRelatorio}`);
   console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n");
 }
-
+    
 main();
