@@ -11,3 +11,6 @@ correcoes-*.html
 explorer
 npm
 output/
+node
+index.html
+package-lock.json
