@@ -1,0 +1,147 @@
+CARLOTE — RELATÓRIO DE QA
+Arquivo: App.js
+Data: 13/03/2026, 23:41:54
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📌 AUTENTICAÇÃO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+**BUGS ENCONTRADOS**
+
+* **Crítico**: A função `entrar` não verifica se o `municipioSel` é válido antes de realizar a autenticação.
+* **Alto**: A função `cadastrar` não verifica se o `municipioSel` é válido antes de realizar o cadastro.
+* **Médio**: A função `esqueceuSenha` não verifica se o e-mail informado é válido antes de enviar o e-mail de redefinição de senha.
+* **Baixo**: A variável `lembrar` não é utilizada em nenhum lugar do código.
+
+**AVISOS**
+
+* A função `carregarMeusChamados` pode retornar uma lista vazia se o usuário não estiver autenticado.
+* A função `abrirDetalhe` pode retornar um erro se o chamado não for encontrado.
+* A variável `titulo` é utilizada em várias funções, mas não é verificada se é válida ou não.
+
+**CASOS DE TESTE**
+
+* CT-001: Autenticação com e-mail e senha válidos.
+* CT-002: Autenticação com e-mail inválido.
+* CT-003: Autenticação com senha inválida.
+* CT-004: Cadastro com e-mail e senha válidos.
+* CT-005: Cadastro com e-mail inválido.
+* CT-006: Cadastro com senha inválida.
+* CT-007: Redefinição de senha com e-mail válido.
+* CT-008: Redefinição de senha com e-mail inválido.
+
+**QUALIDADE**
+
+* O código está organizado e fácil de entender, mas há algumas melhorias que podem ser feitas para torná-lo mais robusto e seguro.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📌 CHAMADOS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Aqui está a análise do código:
+
+**BUGS ENCONTRADOS**
+
+1. **Alto**: A função `MapaChamados` não verifica se o objeto `chamados` é nulo ou indefinido antes de tentar acessar suas propriedades. Isso pode causar um erro de referência nula.
+2. **Médio**: A função `Badge` não verifica se o parâmetro `status` é uma string válida antes de tentar acessar o objeto `STATUS`. Isso pode causar um erro de referência nula.
+3. **Baixo**: A função `Hdr` não verifica se o parâmetro `onVoltar` é uma função antes de tentar chamá-la. Isso pode causar um erro de chamada de função não definida.
+
+**AVISOS**
+
+1. A utilização de `useRef` e `useEffect` em `MapaChamados` pode causar problemas de desempenho se a lista de chamados for muito grande, pois a função `useEffect` é chamada a cada renderização.
+2. A função `MapaChamados` não utiliza a biblioteca `leaflet` de forma eficiente, pois cria um novo mapa a cada renderização.
+3. A utilização de `innerHTML` em `MapaChamados` pode causar problemas de segurança se o conteúdo do marcador for malicioso.
+
+**CASOS DE TESTE**
+
+1. CT-001: Testar se a função `MapaChamados` renderiza corretamente com uma lista de chamados válida.
+2. CT-002: Testar se a função `MapaChamados` renderiza corretamente com uma lista de chamados vazia.
+3. CT-003: Testar se a função `MapaChamados` renderiza corretamente com uma lista de chamados com localização inválida.
+4. CT-004: Testar se a função `Badge` renderiza corretamente com um status válido.
+5. CT-005: Testar se a função `Hdr` renderiza corretamente com um título e subtítulo válidos.
+
+**QUALIDADE**
+
+Código complexo e com potenciais problemas de desempenho e segurança, que requer revisão e otimização.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📌 UPLOAD DE FOTO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+**Análise do Código da Funcionalidade "Upload de Foto"**
+
+### BUGS ENCONTRADOS
+
+* **Médio**: O código não verifica se o arquivo de imagem é válido antes de tentar carregá-lo na memória. Isso pode causar problemas se o usuário selecionar um arquivo inválido.
+* **Baixo**: O código não remove a referência ao arquivo de imagem da memória quando o usuário remove a pré-visualização da foto.
+* **Médio**: O código não lida com erros que podem ocorrer durante o upload da imagem.
+
+### AVISOS
+
+* O código utiliza `alert` para exibir mensagens de erro ao usuário. Isso pode não ser a melhor abordagem, pois `alert` pode ser bloqueado por alguns navegadores ou configurado para não aparecer. Em vez disso, é recomendado utilizar uma biblioteca de notificação mais moderna e flexível.
+* O código utiliza um tamanho de arquivo máximo de 5MB, mas não há validação para garantir que o arquivo de imagem não ultrapasse esse limite.
+* O código não verifica se o tipo de arquivo de imagem é suportado pelo navegador.
+
+### CASOS DE TESTE
+
+* CT-001: Testar se a pré-visualização da foto é exibida corretamente após selecionar um arquivo de imagem válido.
+* CT-002: Testar se a pré-visualização da foto é removida quando o usuário clica no botão de remover.
+* CT-003: Testar se o código lida corretamente com arquivos de imagem inválidos ou corrompidos.
+* CT-004: Testar se o código lida corretamente com arquivos de imagem que ultrapassam o tamanho máximo de 5MB.
+* CT-005: Testar se o código lida corretamente com erros que ocorrem durante o upload da imagem.
+
+### QUALIDADE
+
+Resumo em uma linha: O código da funcionalidade "Upload de Foto" é básico e funciona, mas carece de validação e tratamento de erros mais robustos, além de algumas melhorias de UX e performance.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📌 GPS E LOCALIZAÇÃO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Aqui está a análise do código da funcionalidade "GPS e Localização":
+
+**BUGS ENCONTRADOS**
+
+1. **Crítico**: A variável `CAT_COR` não é definida em lugar algum no código, o que pode causar um erro de referência indefinida. 
+2. **Alto**: A função `uploadCloudinary` não é definida em lugar algum no código, o que pode causar um erro de referência indefinida.
+3. **Médio**: A função `capturarLocalizacao` não verifica se o usuário concedeu permissão para acessar a localização antes de tentar obter a localização atual.
+
+**AVISOS**
+
+1. O código usa a API de geolocalização do navegador, que pode não ser suportada em todos os dispositivos ou navegadores.
+2. O código usa a biblioteca Leaflet para exibir o mapa, mas não há nenhum erro de tratamento para caso a biblioteca não seja carregada corretamente.
+3. O código não verifica se a localização obtida é válida antes de tentar exibir o mapa.
+
+**CASOS DE TESTE**
+
+1. CT-001: Testar se o mapa é exibido corretamente quando a localização é obtida com sucesso.
+2. CT-002: Testar se o mapa não é exibido quando a localização não é obtida.
+3. CT-003: Testar se a função `capturarLocalizacao` é executada corretamente quando o usuário concede permissão para acessar a localização.
+4. CT-004: Testar se a função `uploadCloudinary` é executada corretamente quando uma foto é enviada.
+
+**QUALIDADE**
+Código tem alguns problemas de referência indefinida e falta de tratamento de erros, mas em geral segue boas práticas de programação.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📌 DASHBOARD ADMIN
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+**Análise do Código da Funcionalidade "Dashboard Admin"**
+
+### 1. BUGS ENCONTRADOS
+
+* **BUG-001: Variáveis não declaradas** (Médio) - Algumas variáveis como `C`, `FF`, `MESES`, `CAT_COR`, `STATUS` não são declaradas no código apresentado.
+* **BUG-002: Erros de sintaxe** (Crítico) - Há erros de sintaxe no código, como o uso de `return` fora de uma função.
+* **BUG-003: Uso indevido de Hooks** (Alto) - O código usa `useState` e `useEffect` fora de um componente funcional.
+
+### 2. AVISOS
+
+* **AVISO-001: Código não organizado** - O código parece não estar organizado, com muitas variáveis e funções declaradas de forma confusa.
+* **AVISO-002: Uso de bibliotecas não declaradas** - O código usa bibliotecas como `recharts` e `firebase` sem declará-las explicitamente.
+* **AVISO-003: Segurança** - O código parece armazenar informações de login no local storage, o que pode ser um risco de segurança.
+
+### 3. CASOS DE TESTE
+
+* **CT-001: Renderização do Dashboard** - Testar se o dashboard é renderizado corretamente.
+* **CT-002: Filtro por categoria** - Testar se o filtro por categoria funciona corretamente.
+* **CT-003: Filtro por status** - Testar se o filtro por status funciona corretamente.
+* **CT-004: Tempo médio de resolução** - Testar se o tempo médio de resolução é calculado corretamente.
+
+### 4. QUALIDADE
+
+O código apresenta problemas de sintaxe, organização e segurança, o que afeta sua qualidade e manutenção. É necessário revisar e refatorar o código para melhorar sua robustez e escalabilidade.
