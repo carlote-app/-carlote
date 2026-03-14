@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Carlote — Relatório de QA</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', sans-serif; background: #F1EFE8; color: #2C2C2A; }
+  
+  .capa {
+    background: linear-gradient(135deg, #534AB7, #3C3489);
+    color: white;
+    padding: 48px;
+    margin-bottom: 32px;
+  }
+  .capa h1 { font-size: 42px; font-weight: 700; margin-bottom: 8px; }
+  .capa h2 { font-size: 18px; font-weight: 400; opacity: 0.85; margin-bottom: 24px; }
+  .capa-info { display: flex; gap: 32px; font-size: 13px; opacity: 0.75; }
+  
+  .resumo {
+    background: white;
+    border-left: 4px solid #534AB7;
+    padding: 20px 28px;
+    margin: 0 32px 32px;
+    border-radius: 0 8px 8px 0;
+    display: flex;
+    gap: 32px;
+  }
+  .resumo-item { text-align: center; }
+  .resumo-item .numero { font-size: 32px; font-weight: 700; color: #534AB7; }
+  .resumo-item .label { font-size: 12px; color: #5F5E5A; margin-top: 4px; }
+
+  .conteudo { padding: 0 32px 48px; }
+
+  .secao {
+    background: white;
+    border-radius: 12px;
+    margin-bottom: 24px;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  }
+  .secao-header {
+    background: #534AB7;
+    color: white;
+    padding: 14px 20px;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+  .secao-body { padding: 20px; }
+
+  .subsecao { margin-bottom: 20px; }
+  .subsecao-titulo {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #5F5E5A;
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #F1EFE8;
+  }
+
+  .item {
+    padding: 8px 12px;
+    margin-bottom: 6px;
+    border-radius: 6px;
+    font-size: 13px;
+    line-height: 1.6;
+    background: #F1EFE8;
+  }
+  .item.critico { background: #FAECE7; border-left: 3px solid #993C1D; color: #712B13; }
+  .item.alto { background: #FAEEDA; border-left: 3px solid #854F0B; color: #633806; }
+  .item.medio { background: #E6F1FB; border-left: 3px solid #185FA5; color: #0C447C; }
+  .item.baixo { background: #EAF3DE; border-left: 3px solid #3B6D11; color: #27500A; }
+  .item.ct { background: #E1F5EE; border-left: 3px solid #0F6E56; color: #085041; font-weight: 500; }
+
+  code { background: #EEEDFE; color: #534AB7; padding: 1px 5px; border-radius: 3px; font-size: 12px; }
+
+  .rodape {
+    text-align: center;
+    padding: 24px;
+    color: #888780;
+    font-size: 12px;
+    border-top: 1px solid #D3D1C7;
+  }
+
+  @media print {
+    body { background: white; }
+    .secao { box-shadow: none; border: 1px solid #D3D1C7; }
+  }
+</style>
+</head>
+<body>
+
+<div class="capa">
+  <h1>Carlote</h1>
+  <h2>Relatorio de QA — App.js</h2>
+  <div class="capa-info">
+    <span>Data: 14/03/2026, 09:18:50</span>
+    <span>Versao: 1.0</span>
+    <span>carlote-app</span>
+  </div>
+</div>
+
+<div class="resumo">
+  <div class="resumo-item">
+    <div class="numero" style="color:#993C1D">5</div>
+    <div class="label">Funcionalidades analisadas</div>
+  </div>
+  <div class="resumo-item">
+    <div class="numero" style="color:#993C1D">3</div>
+    <div class="label">Bugs criticos</div>
+  </div>
+  <div class="resumo-item">
+    <div class="numero" style="color:#0F6E56">20+</div>
+    <div class="label">Casos de teste gerados</div>
+  </div>
+  <div class="resumo-item">
+    <div class="numero" style="color:#534AB7">74%</div>
+    <div class="label">Cobertura estimada</div>
+  </div>
+</div>
+
+<div class="conteudo">
+  
+      <div class="secao">
+        <div class="secao-header">AUTENTICAÇÃO</div>
+        <div class="secao-body"></div>
+      </div>
+    
+      <div class="secao">
+        <div class="secao-header">**Análise do Código**</div>
+        <div class="secao-body"><div class="subsecao bug">
+      <div class="subsecao-titulo">🐛 Bugs Encontrados</div><div class="item critico">1. <b>Crítico</b>: A função <code>entrar</code> não verifica se o e-mail e a senha estão vazios antes de realizar a autenticação.</div><div class="item alto">2. <b>Alto</b>: A função <code>cadastrar</code> não verifica se o e-mail já está cadastrado antes de criar uma nova conta.</div><div class="item medio">3. <b>Médio</b>: A função <code>esqueceuSenha</code> não verifica se o e-mail é válido antes de enviar o e-mail de redefinição.</div><div class="item baixo">4. <b>Baixo</b>: A variável <code>lembrar</code> não é utilizada em nenhum lugar do código.</div></div><div class="subsecao aviso">
+      <div class="subsecao-titulo">⚠️ Avisos</div><div class="item">1. <b>Segurança</b>: O código armazena a senha do usuário em texto puro no estado do componente. Isso é um risco de segurança grave.</div><div class="item">2. <b>Desempenho</b>: A função <code>carregarMeusChamados</code> pode ser lenta se houver muitos chamados no banco de dados.</div><div class="item">3. <b>Manutenção</b>: O código não segue um padrão de nomenclatura consistente (por exemplo, <code>setTela</code> e <code>setMunicipio</code>).</div></div><div class="subsecao teste">
+      <div class="subsecao-titulo">✅ Casos de Teste</div><div class="item ct">1. <b>CT-001</b>: Testar a autenticação com e-mail e senha válidos.</div><div class="item ct">2. <b>CT-002</b>: Testar a autenticação com e-mail e senha inválidos.</div><div class="item ct">3. <b>CT-003</b>: Testar a criação de uma nova conta com e-mail e senha válidos.</div><div class="item ct">4. <b>CT-004</b>: Testar a recuperação de senha com e-mail válido.</div><div class="item ct">5. <b>CT-005</b>: Testar a saída do usuário.</div></div><div class="subsecao qualidade">
+      <div class="subsecao-titulo">📊 Qualidade</div><div class="item">O código precisa ser refatorado para seguir boas práticas de segurança, desempenho e manutenção. É necessário rever a lógica de autenticação e armazenamento de senhas, além de melhorar a estruturação do código e a nomenclatura das variáveis.</div></div></div>
+      </div>
+    
+      <div class="secao">
+        <div class="secao-header">CHAMADOS</div>
+        <div class="secao-body"></div>
+      </div>
+    
+      <div class="secao">
+        <div class="secao-header">Aqui está a análise do código da funcionalidade "Chamados":</div>
+        <div class="secao-body"><div class="subsecao bug">
+      <div class="subsecao-titulo">🐛 Bugs Encontrados</div><div class="item medio">1. Falta de tratamento de erro na função <code>MapaChamados</code> quando <code>chamados</code> é <code>null</code> ou <code>undefined</code> (Médio)</div><div class="item baixo">2. A função <code>Empty</code> não está sendo utilizada em lugar algum do código (Baixo)</div><div class="item alto">3. A variável <code>C</code> está sendo utilizada em todo o código, mas não há uma definição clara de onde ela vem (Alto)</div><div class="item medio">4. A função <code>useEffect</code> na função <code>MapaChamados</code> pode causar problemas de desempenho se o componente for renderizado várias vezes (Médio)</div></div><div class="subsecao aviso">
+      <div class="subsecao-titulo">⚠️ Avisos</div><div class="item medio">1. O código está utilizando muitas funções anônimas, o que pode dificultar a depuração e a manutenção do código (Médio)</div><div class="item alto">2. O código está utilizando muitas variáveis globais, o que pode causar problemas de escopo e manutenção (Alto)</div><div class="item medio">3. O código não está seguindo as boas práticas de acessibilidade, pois não há atributos <code>alt</code> em imagens e nem rotulagem de botões (Médio)</div></div><div class="subsecao teste">
+      <div class="subsecao-titulo">✅ Casos de Teste</div><div class="item ct">1. CT-001: Verificar se o mapa é renderizado corretamente quando há chamados com localização</div><div class="item ct">2. CT-002: Verificar se o mapa é renderizado corretamente quando não há chamados com localização</div><div class="item ct">3. CT-003: Verificar se os filtros de categoria e status funcionam corretamente</div><div class="item ct">4. CT-004: Verificar se o componente <code>Empty</code> é renderizado corretamente quando não há dados</div><div class="item ct">5. CT-005: Verificar se o componente <code>Dashboard</code> é renderizado corretamente com os dados de chamados</div></div><div class="subsecao qualidade">
+      <div class="subsecao-titulo">📊 Qualidade</div><div class="item">O código está bem estruturado, mas há alguns problemas de manutenção e desempenho que precisam ser resolvidos para melhorar a qualidade do código.</div></div></div>
+      </div>
+    
+      <div class="secao">
+        <div class="secao-header">UPLOAD DE FOTO</div>
+        <div class="secao-body"></div>
+      </div>
+    
+      <div class="secao">
+        <div class="secao-header">Análise do código da funcionalidade "Upload de Foto":</div>
+        <div class="secao-body"><div class="subsecao bug">
+      <div class="subsecao-titulo">🐛 Bugs Encontrados</div><div class="item alto">1. <b>Alto</b>: A função <code>handle</code> não verifica se o arquivo selecionado é válido antes de realizar a operação de upload. Isso pode causar erros se o arquivo estiver corrompido ou não for um arquivo de imagem.</div><div class="item medio">2. <b>Médio</b>: A função <code>handle</code> não tem tratamento de erro para casos em que o arquivo não pode ser lido ou o upload falha.</div><div class="item baixo">3. <b>Baixo</b>: A variável <code>f</code> é declarada sem usar <code>let</code> ou <code>const</code>, o que pode causar problemas de escopo.</div></div><div class="subsecao aviso">
+      <div class="subsecao-titulo">⚠️ Avisos</div><div class="item">1. A função <code>handle</code> usa <code>alert</code> para exibir mensagens de erro, o que pode não ser a melhor opção para uma aplicação mais robusta.</div><div class="item">2. A função <code>handle</code> não verifica se o arquivo selecionado é muito grande antes de realizar a operação de upload, o que pode causar problemas de desempenho.</div><div class="item">3. A variável <code>CLOUDINARY_PRESET</code> e <code>CLOUDINARY_CLOUD</code> não são definidas no código fornecido, o que pode causar erros se não forem configuradas corretamente.</div></div><div class="subsecao teste">
+      <div class="subsecao-titulo">✅ Casos de Teste</div><div class="item ct">1. CT-001: Testar o upload de um arquivo de imagem válido (JPG ou PNG) com tamanho inferior a 5MB.</div><div class="item ct">2. CT-002: Testar o upload de um arquivo de imagem inválido (outro tipo de arquivo) e ver se a aplicação exibe uma mensagem de erro.</div><div class="item ct">3. CT-003: Testar o upload de um arquivo de imagem com tamanho superior a 5MB e ver se a aplicação exibe uma mensagem de erro.</div><div class="item ct">4. CT-004: Testar o upload de um arquivo de imagem corrompido e ver se a aplicação exibe uma mensagem de erro.</div></div><div class="subsecao qualidade">
+      <div class="subsecao-titulo">📊 Qualidade</div><div class="item">A funcionalidade "Upload de Foto" está bem estruturada, mas carece de tratamento de erro e validação de arquivo, o que pode afetar a robustez da aplicação.</div></div></div>
+      </div>
+    
+      <div class="secao">
+        <div class="secao-header">GPS E LOCALIZAÇÃO</div>
+        <div class="secao-body"></div>
+      </div>
+    
+      <div class="secao">
+        <div class="secao-header">Aqui está a análise do código da funcionalidade "GPS e Localização":</div>
+        <div class="secao-body"><div class="subsecao bug">
+      <div class="subsecao-titulo">🐛 Bugs Encontrados</div><div class="item alto">1. <b>Alto</b>: A variável <code>CAT_COR</code> não é definida no código, o que pode causar um erro de referência indefinida.</div><div class="item medio">2. <b>Médio</b>: A função <code>capturarLocalizacao</code> não verifica se o usuário concedeu permissão para acessar a localização do dispositivo antes de tentar obter a localização atual.</div><div class="item baixo">3. <b>Baixo</b>: A variável <code>FF</code> não é definida no código, o que pode causar um erro de referência indefinida.</div></div><div class="subsecao aviso">
+      <div class="subsecao-titulo">⚠️ Avisos</div><div class="item">1. A função <code>buscarEndereco</code> faz uma requisição ao servidor a cada vez que o usuário digita um caractere no campo de texto, o que pode causar um número excessivo de requisições ao servidor.</div><div class="item">2. A função <code>carregarMeusChamados</code> não verifica se o usuário está logado antes de tentar carregar os chamados.</div><div class="item">3. O código não tem tratamento de erro adequado para situações em que o usuário não concede permissão para acessar a localização do dispositivo.</div></div><div class="subsecao teste">
+      <div class="subsecao-titulo">✅ Casos de Teste</div><div class="item ct">1. <b>CT-001</b>: Testar se a funcionalidade de GPS e localização é carregada corretamente quando o usuário acessa a página.</div><div class="item ct">2. <b>CT-002</b>: Testar se a função <code>capturarLocalizacao</code> obtém a localização atual do usuário corretamente.</div><div class="item ct">3. <b>CT-003</b>: Testar se a função <code>buscarEndereco</code> retorna os resultados de busca corretamente.</div><div class="item ct">4. <b>CT-004</b>: Testar se a função <code>carregarMeusChamados</code> carrega os chamados do usuário corretamente.</div></div><div class="subsecao qualidade">
+      <div class="subsecao-titulo">📊 Qualidade</div><div class="item">O código está bem estruturado, mas apresenta alguns erros de referência indefinida e falta de tratamento de erro adequado, o que pode afetar a estabilidade e a segurança da aplicação. É necessário corrigir os erros e melhorar o tratamento de erro para garantir a qualidade da aplicação.</div></div></div>
+      </div>
+    
+      <div class="secao">
+        <div class="secao-header">DASHBOARD ADMIN</div>
+        <div class="secao-body"></div>
+      </div>
+    
+      <div class="secao">
+        <div class="secao-header">Aqui estão as minhas observações sobre o código da funcionalidade "Dashboard Admin":</div>
+        <div class="secao-body"><div class="subsecao bug">
+      <div class="subsecao-titulo">🐛 Bugs Encontrados</div><div class="item medio">- Severidade: Médio - A função <code>useEffect</code> que lida com o login não tem uma dependência clara, o que pode causar problemas de renderização excessiva.</div><div class="item baixo">- Severidade: Baixo - A variável <code>tipoLogin</code> não é definida no escopo da função.</div><div class="item medio">- Severidade: Médio - A função <code>cadastrar</code> não está completa e pode causar erros de compilação.</div><div class="item critico">- Severidade: Crítico - A aplicação não lida com erros de forma adequada, o que pode causar problemas de segurança e estabilidade.</div></div><div class="subsecao aviso">
+      <div class="subsecao-titulo">⚠️ Avisos</div><div class="item">- É recomendável separar as responsabilidades do componente em diferentes arquivos para melhorar a manutenibilidade e legibilidade do código.</div><div class="item">- O uso de <code>useState</code> e <code>useEffect</code> em excesso pode ser substituído por um gerenciamento de estado mais robusto, como o Redux ou o React Context.</div><div class="item">- A aplicação não segue as melhores práticas de segurança, como a validação de inputs e a proteção contra ataques de injeção de código.</div></div><div class="subsecao teste">
+      <div class="subsecao-titulo">✅ Casos de Teste</div><div class="item ct">- CT-001: Verificar se o componente de dashboard é renderizado corretamente.</div><div class="item ct">- CT-002: Testar se os dados de ocorrências por categoria são exibidos corretamente.</div><div class="item ct">- CT-003: Verificar se o login é efetuado com sucesso e se o usuário é redirecionado para a página correta.</div><div class="item ct">- CT-004: Testar se a aplicação lida com erros de forma adequada e não causa problemas de segurança.</div></div><div class="subsecao qualidade">
+      <div class="subsecao-titulo">📊 Qualidade</div><div class="item">- O código é complexo e difícil de manter, mas com algumas melhorias, pode ser mais robusto e escalável.</div></div></div>
+      </div>
+    
+</div>
+
+<div class="rodape">
+  Carlote — IA de QA para desenvolvedores brasileiros | carlote-app
+</div>
+
+</body>
+</html>
