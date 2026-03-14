@@ -5,8 +5,6 @@ require("dotenv").config({ path: ".env" });
 const { gerarPDF } = require("./gerador");
 const { abrirPR } = require("./pr");
 
-const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
-
 const FUNCIONALIDADES = [
   { nome: "Autenticação", palavras: ["login", "senha", "auth", "usuario", "cadastro", "signIn", "signUp"] },
   { nome: "Chamados", palavras: ["chamado", "reporte", "ocorrencia", "status", "aberto", "resolvido"] },
@@ -17,31 +15,71 @@ const FUNCIONALIDADES = [
 
 function extrairTrecho(codigo, palavras) {
   const linhas = codigo.split("\n");
-  const linhasRelevantes = [];
+  const indicesRelevantes = new Set();
 
   linhas.forEach((linha, i) => {
     const relevante = palavras.some(p => linha.toLowerCase().includes(p.toLowerCase()));
     if (relevante) {
       const inicio = Math.max(0, i - 3);
       const fim = Math.min(linhas.length, i + 10);
-      linhasRelevantes.push(...linhas.slice(inicio, fim));
+      for (let j = inicio; j < fim; j++) indicesRelevantes.add(j);
     }
   });
 
-  const unicas = [...new Set(linhasRelevantes)];
-  return unicas.slice(0, 80).join("\n");
+  return [...indicesRelevantes]
+    .sort((a, b) => a - b)
+    .slice(0, 80)
+    .map(i => linhas[i])
+    .join("\n");
 }
 
-async function analisar(trecho, funcionalidade) {
+function limparTexto(texto) {
+  return texto
+    .replace(/━+/g, "---")
+    .replace(/📌/g, ">")
+    .replace(/🔍/g, "-")
+    .replace(/✅/g, "[OK]")
+    .replace(/❌/g, "[ERRO]")
+    .replace(/⚠️/g, "[AVISO]")
+    .replace(/📄/g, "[PDF]")
+    .replace(/📁/g, "[Pasta]")
+    .replace(/🤖/g, "[Carlote]")
+    .replace(/🔧/g, "[Fix]")
+    .replace(/🔀/g, "[PR]")
+    .replace(/[^\x00-\x7F\u00C0-\u024F\u00A0-\u00FF]/g, "")
+    .replace(/\*\*(.*?)\*\*/g, "$1")
+    .replace(/#{1,3} /g, "")
+    .trim();
+}
+
+async function chamarAPI(groq, messages, tentativa = 1) {
+  try {
+    const resposta = await groq.chat.completions.create({
+      model: "llama-3.3-70b-versatile",
+      messages,
+    });
+    return resposta.choices[0].message.content;
+  } catch (err) {
+    const isRateLimit = err.status === 429 || err.message?.includes("rate_limit");
+    if (isRateLimit && tentativa < 4) {
+      const espera = tentativa * 10000;
+      console.log(`\n⏳ Rate limit atingido. Aguardando ${espera / 1000}s antes de tentar novamente (tentativa ${tentativa}/3)...`);
+      await new Promise(r => setTimeout(r, espera));
+      return chamarAPI(groq, messages, tentativa + 1);
+    }
+    throw err;
+  }
+}
+
+async function analisar(groq, trecho, funcionalidade) {
   if (!trecho || trecho.trim().length < 50) {
     return `Nenhum código relacionado a "${funcionalidade}" encontrado neste arquivo.`;
   }
 
   console.log(`\n🔍 Analisando: ${funcionalidade}...`);
 
-  const resposta = await groq.chat.completions.create({
-    model: "llama-3.3-70b-versatile",
-    messages: [
+  try {
+    return await chamarAPI(groq, [
       {
         role: "system",
         content: `Você é a Carlote, IA especialista em QA para projetos React e JavaScript brasileiros.
@@ -58,18 +96,18 @@ Seja direto e técnico.`,
         role: "user",
         content: `Funcionalidade: ${funcionalidade}\n\nCódigo:\n${trecho}`,
       },
-    ],
-  });
-
-  return resposta.choices[0].message.content;
+    ]);
+  } catch (err) {
+    console.error(`\n⚠️ Erro ao analisar ${funcionalidade}: ${err.message}`);
+    return `Erro ao analisar "${funcionalidade}": ${err.message}`;
+  }
 }
 
-async function gerarCorrecoes(relatorio, codigo, arquivo) {
+async function gerarCorrecoes(groq, relatorio, arquivo) {
   console.log("🔧 Carlote gerando correções...\n");
 
-  const resposta = await groq.chat.completions.create({
-    model: "llama-3.3-70b-versatile",
-    messages: [
+  try {
+    const correcoes = await chamarAPI(groq, [
       {
         role: "system",
         content: `Você é a Carlote, IA especialista em QA para projetos React e JavaScript brasileiros.
@@ -83,17 +121,14 @@ Seja direto e mostre apenas os trechos relevantes, não o arquivo inteiro.`,
       },
       {
         role: "user",
-        content: `Relatório de bugs encontrados:\n${relatorio}\n\nCódigo original:\n${codigo.slice(0, 3000)}`,
+        content: `Relatório de bugs encontrados:\n${relatorio}`,
       },
-    ],
-  });
+    ]);
 
-  const correcoes = resposta.choices[0].message.content;
+    if (!fs.existsSync("output")) fs.mkdirSync("output");
+    const nomeArquivo = `output/correcoes-${Date.now()}.html`;
 
-  if (!fs.existsSync("output")) fs.mkdirSync("output");
-  const nomeArquivo = `output/correcoes-${Date.now()}.html`;
-
-  const html = `<!DOCTYPE html>
+    const html = `<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
@@ -114,7 +149,7 @@ Seja direto e mostre apenas os trechos relevantes, não o arquivo inteiro.`,
 </head>
 <body>
 <div class="capa">
-  <h1>Carlote — Correções</h1>
+  <h1>Carlote - Correcoes</h1>
   <h2>Arquivo: ${arquivo} | ${new Date().toLocaleString("pt-BR")}</h2>
 </div>
 <div class="conteudo">
@@ -129,56 +164,61 @@ Seja direto e mostre apenas os trechos relevantes, não o arquivo inteiro.`,
     }
   </div>
 </div>
-<div class="rodape">Carlote — IA de QA para desenvolvedores brasileiros</div>
+<div class="rodape">Carlote - IA de QA para desenvolvedores brasileiros</div>
 </body>
 </html>`;
 
-  fs.writeFileSync(nomeArquivo, html);
-  console.log(`\n🔧 Correções salvas em: ${nomeArquivo}`);
-  console.log("💡 Abra o arquivo no navegador para ver as correções!\n");
+    fs.writeFileSync(nomeArquivo, html);
+    console.log(`\n🔧 Correções salvas em: ${nomeArquivo}`);
+    console.log("💡 Abra o arquivo no navegador para ver as correções!\n");
+
+  } catch (err) {
+    console.error(`\n❌ Erro ao gerar correções: ${err.message}`);
+  }
 }
 
 async function main() {
   const arquivo = process.argv[2];
-  const modo = process.argv[3];
-  const fix = modo === "--fix";
-  const pr = modo === "--pr";
+  const fix = process.argv.includes("--fix");
+  const pr = process.argv.includes("--pr");
 
   if (!arquivo) {
     console.log("\nUso:");
-    console.log("  node src/carlote.js <arquivo>          — analisar");
-    console.log("  node src/carlote.js <arquivo> --fix    — analisar e sugerir correções");
-    console.log("  node src/carlote.js <arquivo> --pr owner repo — analisar e abrir PR");
+    console.log("  node src/carlote.js <arquivo>                        — analisar");
+    console.log("  node src/carlote.js <arquivo> --fix                  — analisar e sugerir correcoes");
+    console.log("  node src/carlote.js <arquivo> --pr owner repo        — analisar e abrir PR");
+    console.log("  node src/carlote.js <arquivo> --fix --pr owner repo  — tudo junto");
     return;
   }
 
   if (!fs.existsSync(arquivo)) {
-    console.log(`\n❌ Arquivo não encontrado: ${arquivo}`);
+    console.log(`\n❌ Arquivo nao encontrado: ${arquivo}`);
     console.log("Verifique o caminho e tente novamente.\n");
     return;
   }
 
   if (!process.env.GROQ_API_KEY) {
-    console.log("\n❌ GROQ_API_KEY não encontrada!");
+    console.log("\n❌ GROQ_API_KEY nao encontrada!");
     console.log("Crie um arquivo .env com: GROQ_API_KEY=sua_chave");
-    console.log("Obtenha sua chave grátis em: console.groq.com\n");
+    console.log("Obtenha sua chave gratis em: console.groq.com\n");
     return;
   }
 
+  const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
   const codigo = fs.readFileSync(arquivo, "utf8");
   let relatorio = "";
 
-  console.log("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-  console.log("🤖 CARLOTE — Relatório de QA por Funcionalidade");
-  console.log(`📁 Arquivo: ${arquivo}`);
-  console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+  console.log("\n-------------------------------------------");
+  console.log("Carlote - Relatorio de QA por Funcionalidade");
+  console.log(`Arquivo: ${arquivo}`);
+  console.log("-------------------------------------------");
 
   for (let i = 0; i < FUNCIONALIDADES.length; i++) {
     const { nome, palavras } = FUNCIONALIDADES[i];
     const trecho = extrairTrecho(codigo, palavras);
-    const resultado = await analisar(trecho, nome);
+    const resultado = await analisar(groq, trecho, nome);
 
-    const secao = `\n${"━".repeat(40)}\n📌 ${nome.toUpperCase()}\n${"━".repeat(40)}\n${resultado}\n`;
+    const secao = `\n---\n${nome.toUpperCase()}\n---\n${resultado}\n`;
     console.log(secao);
     relatorio += secao;
 
@@ -189,25 +229,38 @@ async function main() {
 
   if (!fs.existsSync("output")) fs.mkdirSync("output");
   const nomeRelatorio = `output/relatorio-qa-${Date.now()}`;
-  fs.writeFileSync(`${nomeRelatorio}.txt`, `CARLOTE — RELATÓRIO DE QA\nArquivo: ${arquivo}\nData: ${new Date().toLocaleString("pt-BR")}\n${relatorio}`);
-  await gerarPDF(relatorio, arquivo);
+  fs.writeFileSync(
+    `${nomeRelatorio}.txt`,
+    `CARLOTE - RELATORIO DE QA\nArquivo: ${arquivo}\nData: ${new Date().toLocaleString("pt-BR")}\n${limparTexto(relatorio)}`
+  );
+
+  try {
+    await gerarPDF(limparTexto(relatorio), arquivo);
+  } catch (err) {
+    console.error(`\n⚠️ Erro ao gerar PDF: ${err.message}`);
+  }
 
   if (fix) {
-    console.log("\n🔧 Modo --fix ativado! Gerando correções...\n");
-    await gerarCorrecoes(relatorio, codigo, arquivo);
+    console.log("\n[Fix] Modo --fix ativado! Gerando correcoes...\n");
+    await gerarCorrecoes(groq, relatorio, arquivo);
   }
 
   if (pr) {
-    console.log("\n🔀 Modo --pr ativado! Abrindo PR com correções...\n");
-    const owner = process.argv[4] || "somos-civico";
-    const repo = process.argv[5] || "civico-web";
-    await abrirPR(owner, repo, codigo, arquivo);
+    console.log("\n[PR] Modo --pr ativado! Abrindo PR com correcoes...\n");
+    const prIndex = process.argv.indexOf("--pr");
+    const owner = process.argv[prIndex + 1] || "somos-civico";
+    const repo = process.argv[prIndex + 2] || "civico-web";
+    try {
+      await abrirPR(owner, repo, codigo, arquivo);
+    } catch (err) {
+      console.error(`\n❌ Erro ao abrir PR: ${err.message}`);
+    }
   }
 
-  console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-  console.log(`✅ Análise concluída!`);
-  console.log(`📁 Relatórios salvos em: output/`);
-  console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n");
+  console.log("-------------------------------------------");
+  console.log("Analise concluida!");
+  console.log("Relatorios salvos em: output/");
+  console.log("-------------------------------------------\n");
 }
 
 main();
