@@ -1,6 +1,6 @@
 {
   "name": "carlote-ia",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "description": "IA de QA para desenvolvedores brasileiros",
   "main": "src/carlote.js",
   "bin": {
